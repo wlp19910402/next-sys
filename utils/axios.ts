@@ -8,7 +8,7 @@ import { strict } from 'assert'
 
 // import errorStatus from "@/utils/errorStatus.ts"
 // axios配置
-console.log(process)
+// console.log(process)
 const config = {
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 15000,
