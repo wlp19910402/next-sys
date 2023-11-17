@@ -1,6 +1,6 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { SysDicInfoParams, SysDicListParams } from './type.ts'
+import type { SysDicInfoParams, SysDicListParams } from './type.js'
 // 系统字段接口
 enum API {
   SYS_DIC_PAGE_LIST = '/SysDicController/selectPage', //分页查询系统字段信息

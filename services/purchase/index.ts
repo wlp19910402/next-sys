@@ -1,6 +1,6 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { PurchaseInfoParams, PurchaseListParams } from './type.ts'
+import type { PurchaseInfoParams, PurchaseListParams } from './type.js'
 // 配件需求接口
 enum API {
   PURCHASE_PAGE_LIST = '/PurchaseEventController/selectPage', //分页查询配件需求需求列表

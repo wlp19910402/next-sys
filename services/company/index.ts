@@ -4,7 +4,7 @@ import type {
   RequireCompanyListParams,
   CompanyInfoParams,
   CompanyListByPositionParams,
-} from './type.ts'
+} from './type.js'
 // 单位接口
 enum API {
   COMPANY_PAGE_LIST = '/CompanyController/selectPage', //分页查询单位信息

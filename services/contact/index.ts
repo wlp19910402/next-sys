@@ -3,7 +3,7 @@ import axios from '@/utils/axios.ts'
 import type {
   ContactMachineInfoParams,
   ContactMachineListParams,
-} from './type.ts'
+} from './type.js'
 // 全域联系法官一体机设备接口
 enum API {
   CONTACT_MACHINE_PAGE_LIST = '/ContactMachineController/selectPage', //分页查询全域联系法官一体机设备信息

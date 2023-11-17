@@ -1,6 +1,6 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { PrintMachineInfoParams, PrintMachineListParams } from './type.ts'
+import type { PrintMachineInfoParams, PrintMachineListParams } from './type.js'
 // 设备接口
 enum API {
   PRINT_MACHINE_PAGE_LIST = '/PrintMachineController/selectPage', //分页查询设备信息

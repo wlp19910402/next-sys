@@ -1,6 +1,6 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { MountingsInfoParams, MountingsListParams } from './type.ts'
+import type { MountingsInfoParams, MountingsListParams } from './type.js'
 // 配件接口
 enum API {
   MOUNTINGS_PAGE_LIST = '/MountingsController/selectPage', //分页查询配件信息

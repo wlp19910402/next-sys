@@ -1,6 +1,6 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { RequireOrderListParams, SubmitTaskParams } from './type.ts'
+import type { RequireOrderListParams, SubmitTaskParams } from './type.js'
 // 统一管理接口
 enum API {
   //工单

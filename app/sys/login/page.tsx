@@ -2,10 +2,16 @@
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
 import { FspThemeContext } from '@/app/layout'
-import { getWxLoginCode } from '@/clientApi/system/user'
-// const fspData = useContext<any>(FspThemeContext)
+import { getWxLoginCode } from '@/services/system/user'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { decrement, increment, incrementByAmount } from '@/store/slice/counter'
 
 export default function Page() {
+  const count = useAppSelector((state) => state.counter.value)
+  const name = useAppSelector((state) => state.user.name)
+
+  const channelId = useAppSelector((state) => state.user.channelId)
+  const dispatch = useAppDispatch()
   const fspData = useContext<any>(FspThemeContext)
   const [qrCodeInfo, setQrCodeInfo] = useState({
     ticket: '',
@@ -30,10 +36,11 @@ export default function Page() {
       clearTimeout(timer)
     }
   }, [countDown])
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let res = await getWxLoginCode({ channelId: fspData.user.channelId })
+        let res = await getWxLoginCode({ channelId: channelId })
         if (res.code === 200) {
           setReRefreshCode(false)
           setQrCodeInfo({
@@ -55,16 +62,41 @@ export default function Page() {
         console.log('获取登录二维码失败')
       }
     }
-    if (fspData.user.channelId && reRefreshCode) {
+    if (channelId && reRefreshCode) {
       fetchData().catch(console.error)
     }
-  })
+  }, [channelId, reRefreshCode])
 
   return (
     <>
       <div className="flex items-center flex-col max-h-screen min-h-screen justify-center bg-gradient-to-tl from-violet-500 to-fuchsia-500">
         <div className="h-auto bg-white py-6 px-10 rounded-xl xs:w-full  sm:w-3/6 md:w-2/5 lg:w-1/3 xl:w-1/4 ">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <div className="text-gray-400">
+              <button
+                className="px-4 border mx-4 font-bold"
+                aria-label="decrement value"
+                onClick={() => dispatch(decrement())}
+              >
+                -
+              </button>
+              <span>
+                {name}数字{count}
+              </span>
+              <button
+                className="px-4 border mx-4 font-bold"
+                aria-label="Increment value"
+                onClick={() => dispatch(increment())}
+              >
+                +
+              </button>
+              <button
+                className="px-4 border mx-4 font-bold"
+                onClick={() => dispatch(incrementByAmount(4))}
+              >
+                +4
+              </button>
+            </div>
             <Image
               width={80}
               height={80}

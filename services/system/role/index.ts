@@ -4,7 +4,7 @@ import type {
   UserListByRoleIdParams,
   RequireSysRoleListParams,
   UserInfoParams,
-} from './type.ts'
+} from './type.js'
 // 统一管理接口
 enum API {
   SYS_ROLE_PAGE_LIST = '/SysRoleController/selectPage', //分页查询角色列表
