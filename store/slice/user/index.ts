@@ -1,10 +1,7 @@
 import { fetchWxLogin } from '@/services/system/user/index'
-import { RootState } from '@/store'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { UserStateModel } from '@/store/slice/user/model.d'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { toast } from 'react-toastify'
 const initialState: UserStateModel = {
   channelId: '',
   loginToken: '',
@@ -16,6 +13,7 @@ const initialState: UserStateModel = {
   id: '',
 }
 
+// 根据token登录
 const wxLoginThunk = createAsyncThunk(
   'user/login',
   async (params: { code: string; type: string }) => {
@@ -53,6 +51,10 @@ const UserSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    /**
+     * 参数1：异步请求promise的状态（pending、fulfilled、rejected)
+     * 参数2：回调函数，相当于同步的reducer
+     */
     builder.addCase(wxLoginThunk.fulfilled, (state, action) => {
       if (action.payload.code == 200) {
         let res = action.payload.data
