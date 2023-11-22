@@ -6,7 +6,7 @@ const initialState: UserStateModel = {
   channelId: '',
   loginToken: '',
   authToken: '',
-  name: '哈哈',
+  name: '',
   phone: '',
   headUrl: '',
   roleCode: [],
@@ -58,7 +58,7 @@ const UserSlice = createSlice({
     builder.addCase(wxLoginThunk.fulfilled, (state, action) => {
       if (action.payload.code == 200) {
         let res = action.payload.data
-        state.authToken = res.token
+        // state.authToken = res.token
         state.name = res.name
         state.phone = res.phone
         state.headUrl = res.headUrl

@@ -6,6 +6,7 @@ import { useState, createContext, Context } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
+import InitLayoutCmp from '@/components/layout/InitCmp'
 import store from '@/store'
 
 export const FspThemeContext: Context<{}> = createContext({})
@@ -25,6 +26,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Provider store={store}>
           <FspThemeContext.Provider value={{ common }}>
+            <InitLayoutCmp />
             {children}
             <ToastContainer />
           </FspThemeContext.Provider>

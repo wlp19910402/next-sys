@@ -1,8 +1,8 @@
 // 导入二次封装axios
-import axios from '@/utils/axios.ts'
+import axios from '@/utils/axios'
 // 引入接口类型
-import type { RequireSysUserListParams, UserInfoParams } from './type.js'
-import { ElMessageBox } from 'element-plus'
+import type { RequireSysUserListParams, UserInfoParams } from './type'
+
 // 统一管理接口
 enum API {
   //微信登录
