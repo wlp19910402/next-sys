@@ -12,7 +12,7 @@ interface WsResponseParams {
   data: any
 }
 
-export default function RootLayout() {
+export default function InitCmp() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const dispatch = useAppDispatch()

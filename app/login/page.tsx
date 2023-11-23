@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
-import { FspThemeContext } from '@/app/layout'
+import { GlobalContext } from '@/app/layout'
 import { getWxLoginCode } from '@/services/system/user'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { decrement, increment, incrementByAmount } from '@/store/slice/counter'
@@ -9,10 +9,8 @@ import { decrement, increment, incrementByAmount } from '@/store/slice/counter'
 export default function Page() {
   const count = useAppSelector((state) => state.counter.value)
   const name = useAppSelector((state) => state.user.name)
-
   const channelId = useAppSelector((state) => state.user.channelId)
   const dispatch = useAppDispatch()
-  const fspData = useContext<any>(FspThemeContext)
   const [qrCodeInfo, setQrCodeInfo] = useState({
     ticket: '',
     expireSeconds: 0,
