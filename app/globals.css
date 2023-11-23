@@ -4,6 +4,9 @@
 .qm-border-inline-none{
   border-inline-end: none !important
 }
+.dark-bg{
+  background-color: #001529;
+}
 
 /* :root {
   --foreground-rgb: 0, 0, 0;

@@ -25,14 +25,17 @@ export default function Cmp(props: {
       ) : (
         <div></div>
       )}
-      <div className="flex items-center">
+      <div className="flex items-center justify-center">
         <Image
           src={userInfo.headUrl}
           alt="Avatar"
-          className="mb-2 mr-4"
-          width={48}
+          className="mr-4 rounded-full"
+          width={36}
+          fallback="/avatar.jpeg"
         />
-        <div className="ml-4">{userInfo.name}</div>
+        <div className="ml-4 text-gray-400 text-sm">
+          {userInfo.name ? userInfo.name : '未知姓名'}
+        </div>
       </div>
     </header>
   )

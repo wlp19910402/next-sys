@@ -18,7 +18,7 @@ export default function RootLayout({
       <div className="flex-col flex flex-1 ">
         <HeaderCmp menuUnfold={menuUnfold} setMenuUnfold={setMenuUnfold} />
         <main className="main flex-1 bg-gray-50  flex flex-col overflow-auto ">
-          <div className="p-3">
+          <div className="p-1">
             <div className="h-10 bg-red-500">/sss</div>
             <div className="overflow-auto flex-1">
               {children}

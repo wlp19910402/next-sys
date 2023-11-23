@@ -1,8 +1,8 @@
 'use client'
 import 'react-toastify/dist/ReactToastify.css'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { Menu, Image, Typography } from 'antd'
-import type { MenuProps } from 'antd'
+import type { MenuProps, MenuTheme } from 'antd'
 import { GlobalContext } from '@/app/layout'
 import {
   AppstoreOutlined,
@@ -55,28 +55,52 @@ export default function Cmp(props: { menuUnfold: boolean }) {
     console.log('click ', e)
   }
   const globalContext = useContext<any>(GlobalContext)
+  const [menuTheme, setmenuTheme] = useState<MenuTheme>('dark')
   return (
     <aside
-      className={`h-full bg-white overflow-auto flex flex-col border-slate-100 border-r-2 border-solid ${
+      className={`h-full bg-white overflow-auto flex flex-col border-slate-100 border-r border-solid ${
         props.menuUnfold && !globalContext.isMobile ? 'w-64' : 'w-18'
-      }`}
+      } ${menuTheme == 'dark' ? 'dark-bg' : ''}`}
     >
-      <Link className="flex items-center h-14 pl-4  " href="/sys/home">
+      <Link
+        className={`flex items-center h-14 pl-4  border-solid border-b border-slate-100 ${
+          menuTheme == 'dark' ? 'border-slate-700' : 'border-slate-100'
+        }`}
+        href="/sys/home"
+      >
         <Image src="/logo.png" alt="logo" className="mb-2" width={48} />
         {props.menuUnfold && !globalContext.isMobile && (
-          <span className="mx-3 text-base text-gray-600">云信信息管理系统</span>
+          <span
+            className={`mx-3 text-base  ${
+              menuTheme == 'dark' ? 'text-white' : 'text-gray-600'
+            }`}
+          >
+            云信信息管理系统
+          </span>
         )}
       </Link>
-      <div className="flex-1 overflow-auto">
-        <Menu
-          onClick={onClick}
-          inlineCollapsed={!props.menuUnfold || globalContext.isMobile}
-          defaultSelectedKeys={['home']}
-          defaultOpenKeys={['/sys/order/processing']}
-          mode="inline"
-          className="border-none shadow-none qm-border-inline-none"
-          items={items}
-        />
+
+      <div className="flex-1 overflow-auto flex flex-col">
+        <div className="flex-1 overflow-auto">
+          <Menu
+            onClick={onClick}
+            inlineCollapsed={!props.menuUnfold || globalContext.isMobile}
+            defaultSelectedKeys={['home']}
+            defaultOpenKeys={['/sys/order/processing']}
+            mode="inline"
+            theme={menuTheme}
+            className="border-none shadow-none qm-border-inline-none"
+            items={items}
+          />
+        </div>
+        <button
+          className={`border-solid py-2 border-t border-slate-100 text-sm text-gray-400 ${
+            menuTheme == 'dark' ? 'border-slate-700' : 'border-slate-100'
+          }`}
+          onClick={() => setmenuTheme(menuTheme == 'dark' ? 'light' : 'dark')}
+        >
+          切换菜单主题
+        </button>
       </div>
     </aside>
   )
