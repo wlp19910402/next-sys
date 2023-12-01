@@ -4,6 +4,7 @@ import { useContext, useState } from 'react'
 import { Menu, Image, Typography } from 'antd'
 import type { MenuProps, MenuTheme } from 'antd'
 import { GlobalContext } from '@/app/layout'
+import { useRouter } from 'next/navigation'
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -51,8 +52,10 @@ export default function Cmp(props: { menuUnfold: boolean }) {
     ]),
     getItem('工单查询', 'all', <MailOutlined />),
   ]
+  const router = useRouter()
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e)
+    console.log('click ', e.key)
+    router.push(e.key)
   }
   const globalContext = useContext<any>(GlobalContext)
   const [menuTheme, setmenuTheme] = useState<MenuTheme>('dark')

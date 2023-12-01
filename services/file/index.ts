@@ -1,3 +1,4 @@
+'use client'
 import axios from '@/utils/axios.ts'
 // 引入接口类型
 // import type {

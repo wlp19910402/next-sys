@@ -1,43 +1,49 @@
 import axios from '@/utils/axios.ts'
 // 引入接口类型
-import type { SysDicInfoParams, SysDicListParams } from './type.js'
+import type { SysDicInfoParams, SysDicListParams } from './type.ts'
 // 系统字段接口
 enum API {
-  SYS_DIC_PAGE_LIST = '/SysDicController/selectPage', //分页查询系统字段信息
-  SYS_DIC_UPDATE = '/SysDicController/update', //修改系统字段基本信息
-  SYS_DIC_INSERT = '/SysDicController/insert', //新增系统字段基本信息
-  SYS_DIC_DELETE_BY_ID = '/SysDicController/deleteById', //ID删除系统字段基本信息
-  SYS_DIC_INFO_BY_ID = '/SysDicController/selectById', //ID查询系统字段基本信息
-  SYS_DIC_TYPE_LIST = '/SysDicController/getDicTypeList', //查询字典分类列表
-  SYS_DIC_LIST = '/SysDicController/selectList', //查询字典信息列表
+  DELETE_BY_ID = '/admin/AdminDictController/deleteById', //主键逻辑删除
+  INFO_BY_ID = '/admin/AdminDictController/getById', //主键查询
+  INSERT = '/admin/AdminDictController/insert', //主键查询
+  PAGE_LIST = '/admin/AdminDictController/pageList', //分页查询
+  UPDATE_BY_ID = '/admin/AdminDictController/updateById', //主键更新
+  TREE_LIST = '/admin/AdminDictController/treeListAll', //树形结构字典列表查询
+  COMBO_LIST = '/admin/AdminDictController/comboListAll', //普通结构字典列表查询
 }
 
-//分页查询系统类型字段信息
-export const fetchSysDicTypePageList = () => {
-  return axios.get(API.SYS_DIC_TYPE_LIST)
-}
-//分页查询系统字段信息
+//分页查询列表
 export const fetchSysDicPageList = (params: SysDicListParams) => {
-  return axios.post(API.SYS_DIC_PAGE_LIST, params)
+  return axios.post(API.PAGE_LIST, params)
 }
-//新增系统字段
-export const insertSysDic = (params: SysDicInfoParams) => {
-  return axios.post(API.SYS_DIC_INSERT, params)
+//删除
+export const deleteSysDicById = (params: { id: string | number }) => {
+  return axios.post(API.DELETE_BY_ID, params)
 }
-//编辑系统字段
+//编辑信息
 export const updateSysDic = (params: SysDicInfoParams) => {
-  return axios.post(API.SYS_DIC_UPDATE, params)
-}
-//删除系统字段
-export const deleteSysDicById = (params: { id: string; stop: boolean }) => {
-  return axios.get(API.SYS_DIC_DELETE_BY_ID, params)
-}
-//查询系统字段基本信息
-export const getSysDicInfoById = (params: { id: string }) => {
-  return axios.get(API.SYS_DIC_INFO_BY_ID, params)
+  return axios.post(API.UPDATE_BY_ID, params)
 }
 
-// 获取故障类型的所有数据
-export const getSysDicListByCode = (params: { code: string }) => {
-  return axios.get(API.SYS_DIC_LIST, params)
+//新增信息
+export const insertSysDic = (params: SysDicInfoParams) => {
+  return axios.post(API.INSERT, params)
+}
+
+//详细信息
+export const getSysDicInfo = (params: { id: string | number }) => {
+  return axios.get(API.INFO_BY_ID, params)
+}
+
+//树形结构字典列表查询
+export const getSysDicTreeList = (params: {
+  dictTypeCode: string | number
+}) => {
+  return axios.get(API.TREE_LIST, params)
+}
+// 普通结构字典列表查询
+export const getSysDicComboList = (params: {
+  dictTypeCode: string | number
+}) => {
+  return axios.get(API.COMBO_LIST, params)
 }

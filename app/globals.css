@@ -1,6 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+.bg-login{
+  background-image: url(../assets/images/bg.jpg);
+  background-size: cover;
+  background-position: center center;
+}
+.qm-login-shadow{
+  box-shadow: 8px 8px 26px rgba(3,48,214,0.4);
+}
 .qm-border-inline-none{
   border-inline-end: none !important
 }

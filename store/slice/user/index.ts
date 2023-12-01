@@ -1,4 +1,4 @@
-import { fetchWxLogin } from '@/services/system/user/index'
+import { fetchWxLogin } from '@/services/system/login/index'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { UserStateModel } from '@/store/slice/user/model.d'
 import type { PayloadAction } from '@reduxjs/toolkit'

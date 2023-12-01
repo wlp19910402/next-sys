@@ -1,21 +1,26 @@
-// 登录接口需要携带的参数ts类型
-// -- todo --
-export interface WsResponseParams {
-  type: string
-  data: any
+// 用户列表
+export interface PageBaseParams {
+  current: number
+  size: number
 }
 
-export interface RequireSysUserListParams {
-  current: number //当前页面
-  name: string
-  openId: string
-  phone: string
-  size: number //每页显示条数
+export interface RequireSysUserListParams extends PageBaseParams {
+  isDelete?: boolean
+  loginName?: string
+  roleId?: number | string
+  roleQueryType?: string | number
+  userPhone?: number | string
 }
 
 export interface UserInfoParams {
-  openId: string //设备名称
-  name: string //是否连接软件
-  phone: string //备注
-  id?: string //编辑的时候有
+  avatarUrl?: string
+  id?: number | string
+  isDelete?: boolean | string
+  isUpdatePwd?: boolean
+  loginName?: string
+  orderNum?: number
+  password?: string
+  roleIdList: string[] | []
+  userName: string
+  userPhone: number | string | null
 }

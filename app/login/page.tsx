@@ -1,16 +1,18 @@
 'use client'
 import Image from 'next/image'
 import { useContext, useEffect, useState } from 'react'
-import { GlobalContext } from '@/app/layout'
-import { getWxLoginCode } from '@/services/system/user'
+// import { GlobalContext } from '@/app/layout'
+import { getWxLoginCode } from '@/services/system/login'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { decrement, increment, incrementByAmount } from '@/store/slice/counter'
+import { Spin } from 'antd'
+// import { decrement, increment, incrementByAmount } from '@/store/slice/counter'
 
 export default function Page() {
   const count = useAppSelector((state) => state.counter.value)
   const name = useAppSelector((state) => state.user.name)
   const channelId = useAppSelector((state) => state.user.channelId)
   const dispatch = useAppDispatch()
+  const [loading, setLoading] = useState(true)
   const [qrCodeInfo, setQrCodeInfo] = useState({
     ticket: '',
     expireSeconds: 0,
@@ -38,6 +40,7 @@ export default function Page() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true)
         let res = await getWxLoginCode({ channelId: channelId })
         if (res.code === 200) {
           setReRefreshCode(false)
@@ -53,24 +56,26 @@ export default function Page() {
         } else {
           console.log(res.msg)
         }
+        setLoading(false)
       } catch (err) {
         console.log(err)
         // koiMsgError('获取登录二维码失败')
         setCountDown(0)
         console.log('获取登录二维码失败')
+        setLoading(false)
       }
     }
     if (channelId && reRefreshCode) {
-      fetchData().catch(console.error)
+      fetchData()
     }
   }, [channelId, reRefreshCode])
 
   return (
     <>
-      <div className="flex items-center flex-col max-h-screen min-h-screen justify-center bg-gradient-to-tl from-violet-500 to-fuchsia-500">
-        <div className="h-auto bg-white py-6 px-10 rounded-xl xs:w-full  sm:w-3/6 md:w-2/5 lg:w-1/3 xl:w-1/4 ">
+      <div className="flex items-center flex-col max-h-screen min-h-screen justify-center bg-gradient-to-tl from-violet-500 to-fuchsia-500 bg-login">
+        <div className="qm-login-shadow h-auto bg-white py-6 px-10 rounded-xl xs:w-full  sm:w-3/6 md:w-2/5 lg:w-1/3 xl:w-1/4 ">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <div className="text-gray-400">
+            {/* <div className="text-gray-400">
               <button
                 className="px-4 border mx-4 font-bold"
                 aria-label="decrement value"
@@ -94,7 +99,7 @@ export default function Page() {
               >
                 +4
               </button>
-            </div>
+            </div> */}
             <Image
               width={80}
               height={80}
@@ -107,11 +112,11 @@ export default function Page() {
             </h2>
           </div>
 
-          <div className="mt-4 border h-64 w-64 mx-auto text-gray-500 rounded-md overflow-hidden">
-            {qrCodeInfo.ticket ? (
+          <div className="mt-4 border h-64 w-64 mx-auto text-gray-500 rounded-md overflow-hidden flex items-center justify-center">
+            {!loading ? (
               <img src={qrCodeInfo.ticket} alt="云信" layout="cover" />
             ) : (
-              <span>正在加载...</span>
+              <Spin />
             )}
           </div>
           <p className="mt-6 text-center text-sm text-gray-500">
