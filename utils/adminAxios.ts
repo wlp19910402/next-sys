@@ -5,6 +5,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 // import { getToken } from '@/utils/storage.ts'
 import useErrorStore from '@/store/layout/error'
 import { strict } from 'assert'
+import { message } from 'antd'
 
 // import errorStatus from "@/utils/errorStatus.ts"
 // axios配置
@@ -87,6 +88,9 @@ class PackAxios {
               case 500:
                 // errorStore.error = '500'
                 break
+            }
+            if (res.data.code !== 200) {
+              message.error(res.data.msg)
             }
             return res.data
           }

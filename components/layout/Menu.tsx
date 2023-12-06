@@ -5,6 +5,7 @@ import { Menu, Image, Typography } from 'antd'
 import type { MenuProps, MenuTheme } from 'antd'
 import { GlobalContext } from '@/app/layout'
 import { useRouter } from 'next/navigation'
+// import { useRouter } from 'next/router'
 import {
   AppstoreOutlined,
   MailOutlined,
@@ -31,8 +32,8 @@ function getItem(
 
 export default function Cmp(props: { menuUnfold: boolean }) {
   const items: MenuProps['items'] = [
-    getItem('首页', 'home', <MailOutlined />),
-    getItem('系统管理', 'sys', <AppstoreOutlined />, [
+    getItem('首页', '/home', <MailOutlined />),
+    getItem('系统管理', '/sys', <AppstoreOutlined />, [
       getItem('用户管理', '/sys/user', <MailOutlined />),
       getItem('角色管理', '/sys/role'),
       getItem('菜单管理', '/sys/menu'),
@@ -53,8 +54,9 @@ export default function Cmp(props: { menuUnfold: boolean }) {
     getItem('工单查询', 'all', <MailOutlined />),
   ]
   const router = useRouter()
+
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e.key)
+    console.log('click ', e.key, router)
     router.push(e.key)
   }
   const globalContext = useContext<any>(GlobalContext)
@@ -88,7 +90,7 @@ export default function Cmp(props: { menuUnfold: boolean }) {
           <Menu
             onClick={onClick}
             inlineCollapsed={!props.menuUnfold || globalContext.isMobile}
-            defaultSelectedKeys={['home']}
+            defaultSelectedKeys={[router.pathname]}
             defaultOpenKeys={['/sys/order/processing']}
             mode="inline"
             theme={menuTheme}

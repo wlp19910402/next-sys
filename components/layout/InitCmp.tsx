@@ -26,7 +26,6 @@ export default function InitCmp() {
 
   // wx监听是否有扫码登录成功的信息返回 ，登录成功则进行跳转页面
   useEffect(() => {
-    console.log('222222===')
     if (isLogin) {
       const redirectPath = searchParams.get('redirect') as
         | string

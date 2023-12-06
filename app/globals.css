@@ -12,10 +12,26 @@
 .qm-border-inline-none{
   border-inline-end: none !important
 }
+.qm-row-delete td{
+ opacity: 0.6
+  
+}
+.qm-row-delete .ant-table-cell-fix-left,.qm-row-delete .ant-table-cell-fix-right {
+opacity: 1
+}
 .dark-bg{
   background-color: #001529;
 }
+.ant-btn-primary{
+   background-color:#1677ff
+}
 
+.ant-switch {
+    background: rgba(0, 0, 0, 0.25);
+}
+/* button, [type='button'], [type='reset'], [type='submit']{
+  background-color:#1677ff
+} */
 /* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;

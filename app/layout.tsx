@@ -1,11 +1,10 @@
 'use client'
 
 import { Inter } from 'next/font/google'
-import './globals.css'
 import { useState, createContext, Context, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-// import '@ant-design/'
+import './globals.css'
 import { Provider } from 'react-redux'
 import InitLayoutCmp from '@/components/layout/InitCmp'
 import store from '@/store'
@@ -44,7 +43,7 @@ export default function RootLayout({
         <Provider store={store}>
           <GlobalContext.Provider value={{ common, isMobile }}>
             <InitLayoutCmp />
-            {children}
+            <div style={{ maxWidth: '100%' }}>{children}</div>
             <ToastContainer />
           </GlobalContext.Provider>
         </Provider>

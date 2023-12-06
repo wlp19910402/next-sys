@@ -1,8 +1,26 @@
 'use client'
 
 import { ProTable, ProColumns } from '@ant-design/pro-components'
-import { fetchSysUserPageList } from '@/services/system/user'
-import { Image } from 'antd'
+import { fetchSysUserPageList, deleteSysUserById } from '@/services/system/user'
+import {
+  FileTextOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons'
+import ModalUpdateInfo from '@/app/sys/user/components/ModalUpdateInfo'
+import type { ActionType } from '@ant-design/pro-table'
+import DetailDescription from '@/app/sys/user/components/DetailDescription'
+import {
+  Image,
+  Tooltip,
+  Divider,
+  Button,
+  Popconfirm,
+  message,
+  Drawer,
+} from 'antd'
+import { useState, useRef } from 'react'
+
 export default function Page() {
   const columns:
     | ProColumns<
@@ -12,18 +30,21 @@ export default function Page() {
         string
       >[]
     | undefined = [
-    // {
-    //   title: '序号',
-    //   dataIndex: 'index',
-    //   key: 'index',
-    //   width: 120,
-    //   fixed: 'left',
-    // },
+    {
+      title: '序号',
+      dataIndex: 'index',
+      hideInSearch: true,
+      width: 46,
+      fixed: 'left',
+      align: 'center',
+      rowScope: 'row',
+      render: (_, row: any, index: number) => <span>{index + 1}</span>,
+    },
     {
       title: '头像',
       dataIndex: 'avatarUrl',
       hideInSearch: true,
-      width: '40',
+      width: 80,
       align: 'center',
       fixed: 'left',
       key: 'avatarUrl',
@@ -37,40 +58,41 @@ export default function Page() {
       ),
     },
     {
-      title: '用户名称',
-      dataIndex: 'userName',
-      key: 'userName',
-      width: 120,
-      hideInSearch: true,
-    },
-    {
       title: '登录名称',
       dataIndex: 'loginName',
-      width: 120,
+      width: '150px',
       key: 'loginName',
     },
     {
+      title: '用户名称',
+      dataIndex: 'userName',
+      key: 'userName',
+      width: '150px',
+      hideInSearch: true,
+    },
+
+    {
       title: '联系方式',
       dataIndex: 'userPhone',
-      width: 120,
+      width: '150px',
       key: 'userPhone',
     },
     {
       title: '显示顺序',
       dataIndex: 'orderNum',
-      width: 80,
+      width: 76,
       align: 'center',
       key: 'orderNum',
+      hideInSearch: true,
     },
     {
       title: '是否删除',
       dataIndex: 'isDelete',
-      hideInSearch: true,
       width: 80,
       align: 'center',
       key: 'isDelete',
       render: (val: any) => (
-        <div className={`h-10  ${val ? 'text-red-500' : 'text-green-400'}`}>
+        <div className={`${val ? 'text-red-500' : 'text-green-400'}`}>
           {val ? '是' : '否'}
         </div>
       ),
@@ -151,60 +173,141 @@ export default function Page() {
       title: '操作',
       valueType: 'option',
       key: 'option',
-      width: '130px',
+      width: '150px',
       fixed: 'right',
-      // render: (_, record) =>
-      //   record.superAdmin ? (
-      //     [
-      // <a
-      //   type="link"
-      //   onClick={async () => {
-      //     resetPwd({ id: record.id }).then((res) => {
-      //       if (res) message.success('重置密码成功');
-      //     });
-      //   }}
-      // >
-      //   {/* 修改角色 */}
-      //   重置密码
-      // </a>,
-      //   ]
-      // ) : (
-      //   <></>
-      // ),
+      align: 'center',
+      render: (_, record: any) => (
+        <>
+          <Tooltip placement="topLeft" title="删除">
+            <Popconfirm
+              title="确认"
+              description="请确认是否删除"
+              onConfirm={() => handleDelete(record.id)}
+              okText="确认"
+              cancelText="取消"
+            >
+              <Button
+                type="link"
+                loading={deleteLoadingId && deleteLoadingId === record.id}
+                size="small"
+                disabled={record.isDelete}
+                danger
+              >
+                {/* 判断是否在删除加载中 */}
+                {deleteLoadingId && deleteLoadingId === record.id ? (
+                  <></>
+                ) : (
+                  <DeleteOutlined />
+                )}
+              </Button>
+            </Popconfirm>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip placement="topLeft" title="详情">
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                setCurrentRow(record)
+                setDetailDrawerVisable(true)
+              }}
+            >
+              <FileTextOutlined />
+            </Button>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip placement="topLeft" title="编辑">
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                setCurrentRow(record)
+                modalUpdateRef.current?.setOpenModal(true)
+              }}
+            >
+              <EditOutlined />
+            </Button>
+          </Tooltip>
+        </>
+      ),
     },
   ]
-  return (
-    <ProTable
-      // params 是需要自带的参数
-      // 这个参数优先级更高，会覆盖查询表单的参数
-      className="bg"
-      params={{ current: 1, size: 10 }}
-      columns={columns}
-      bordered={true}
-      rowKey="id"
-      pagination={{
-        pageSize: 10,
-      }}
-      request={async (
-        params: {
-          size: number
-          current: number
-        },
-        sort,
-        filter
-      ) => {
-        // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
-        // 如果需要转化参数可以在这里进行修改
-        const res: any = await fetchSysUserPageList(params)
-        return {
-          data: res.data.records,
-          // success 请返回 true，
-          // 不然 table 会停止解析数据，即使有数据
-          success: res.code === 200,
-          // 不传会使用 data 的长度，如果是分页一定要传
-          total: parseInt(res.data.total),
+  const actionRef = useRef<ActionType>()
+  const [deleteLoadingId, setDeleteLoadingId] = useState(null)
+  const handleDelete = (id) => {
+    setDeleteLoadingId(id)
+    deleteSysUserById({ id })
+      .then((res) => {
+        if (res.code === 200) {
+          message.success('删除成功')
+          actionRef?.current?.reload()
+          setDeleteLoadingId(null)
+        } else {
+          setDeleteLoadingId(null)
         }
-      }}
-    />
+      })
+      .catch((err) => {
+        setDeleteLoadingId(null)
+        console.log(err)
+        message.error('删除操作失败')
+      })
+  }
+  const modalUpdateRef = useRef<any>(null)
+  const [currentRow, setCurrentRow] = useState<any>({})
+  const [detailDrawerVisable, setDetailDrawerVisable] = useState(false)
+  return (
+    <>
+      <ProTable
+        // params 是需要自带的参数
+        // 这个参数优先级更高，会覆盖查询表单的参数
+        className="bg"
+        actionRef={actionRef}
+        columns={columns}
+        bordered={true}
+        rowKey="id"
+        scroll={{ x: '100%' }}
+        rowClassName={(record: any, index) =>
+          record.isDelete ? 'qm-row-delete' : ''
+        }
+        pagination={{
+          pageSize: 10,
+        }}
+        toolbar={{
+          title: (
+            <ModalUpdateInfo
+              ref={modalUpdateRef}
+              actionRef={actionRef}
+              currentRow={currentRow}
+              resetCurrentRow={() => setCurrentRow({})}
+            />
+          ),
+        }}
+        request={async (params: { pageSize: number; current: number }) => {
+          // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
+          // 如果需要转化参数可以在这里进行修改
+          const res: any = await fetchSysUserPageList({
+            ...params,
+            size: params.pageSize,
+          })
+          return {
+            data: res.data.records,
+            // success 请返回 true，
+            // 不然 table 会停止解析数据，即使有数据
+            success: res.code === 200,
+            // 不传会使用 data 的长度，如果是分页一定要传
+            total: parseInt(res.data.total),
+          }
+        }}
+      />
+      <Drawer
+        title="详细信息"
+        placement="left"
+        width={600}
+        onClose={() => setDetailDrawerVisable(false)}
+        open={detailDrawerVisable}
+      >
+        <DetailDescription currentRow={currentRow} />
+      </Drawer>
+    </>
   )
 }
