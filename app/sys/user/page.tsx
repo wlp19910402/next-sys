@@ -260,7 +260,7 @@ export default function Page() {
       <ProTable
         // params 是需要自带的参数
         // 这个参数优先级更高，会覆盖查询表单的参数
-        className="bg"
+        // className="bg"
         actionRef={actionRef}
         columns={columns}
         bordered={true}
