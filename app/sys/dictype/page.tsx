@@ -2,7 +2,10 @@
 
 import { ProTable, ProColumns } from '@ant-design/pro-components'
 import { deleteSysUserById } from '@/services/system/user'
-import { fetchSysDicTypePageList } from '@/services/system/dicType'
+import {
+  fetchSysDicTypePageList,
+  deleteSysDicTypeById,
+} from '@/services/system/dicType'
 import {
   FileTextOutlined,
   EditOutlined,
@@ -11,14 +14,7 @@ import {
 import ModalUpdateInfo from '@/app/sys/dictype/components/ModalUpdateInfo'
 import type { ActionType } from '@ant-design/pro-table'
 import DetailDescription from '@/app/sys/dictype/components/DetailDescription'
-import {
-  Tooltip,
-  Divider,
-  Button,
-  Popconfirm,
-  message,
-  Drawer,
-} from 'antd'
+import { Tooltip, Divider, Button, Popconfirm, message, Drawer } from 'antd'
 import { useState, useRef, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { roleAllThunk } from '@/store/slice/role'
@@ -168,7 +164,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const handleDelete = (id) => {
     setDeleteLoadingId(id)
-    deleteSysUserById({ id })
+    deleteSysDicTypeById({ id })
       .then((res) => {
         if (res.code === 200) {
           message.success('删除成功')
