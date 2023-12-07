@@ -35,9 +35,10 @@ export default function Cmp(props: { menuUnfold: boolean }) {
     getItem('首页', '/home', <MailOutlined />),
     getItem('系统管理', '/sys', <AppstoreOutlined />, [
       getItem('用户管理', '/sys/user', <MailOutlined />),
-      getItem('角色管理', '/sys/role'),
-      getItem('菜单管理', '/sys/menu'),
-      getItem('字典管理', '/sys/dic'),
+      getItem('字典类型管理', '/sys/dictype', <MailOutlined />),
+      getItem('字典管理', '/sys/dic', <MailOutlined />),
+      getItem('角色管理', '/sys/role', <MailOutlined />),
+      getItem('菜单管理', '/sys/menu', <MailOutlined />),
     ]),
     getItem('单位管理', '/sys/company', <MailOutlined />),
     getItem('设备管理', '/sys/machine', <MailOutlined />),

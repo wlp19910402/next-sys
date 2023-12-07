@@ -14,7 +14,7 @@
 .ant-switch {
     background: rgba(0, 0, 0, 0.25);
 } 
-/* 
+
 .ant-pro-query-filter {
     padding: 24px;
 }
@@ -37,4 +37,4 @@
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 8px;
-} */
+}
