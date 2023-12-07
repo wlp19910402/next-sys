@@ -12,6 +12,7 @@ import {
   updateSysUser,
   getSysUserInfo,
 } from '@/services/system/user'
+import rules from '@/utils/rules'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, Switch, message } from 'antd'
 import {
@@ -152,7 +153,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           name="loginName"
           label="登录名称"
           placeholder="请输入登录名称"
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[rules.required]}
           disabled={currentRow?.id}
         />
 
@@ -161,7 +162,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
             name="isUpdatePwd"
             label="是否修改密码"
             {...itemLayout}
-            rules={[{ required: true, message: '必填项' }]}
+            rules={[rules.required]}
             checkedChildren="是"
             unCheckedChildren="否"
             onChange={(val: boolean) => {
@@ -177,7 +178,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
               name="password"
               label="登录密码"
               tooltip="最长为 24 位"
-              rules={[{ required: true, message: '必填项' }]}
+              rules={[rules.required]}
             />
             <ProFormText.Password
               {...itemLayout}
@@ -204,13 +205,13 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           {...itemLayout}
           name="userName"
           label="用户名"
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[rules.required]}
         />
         <ProFormText
           name="userPhone"
           {...itemLayout}
           label="联系方式"
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[rules.required, rules.mobile]}
         />
         <ProFormDigit
           name="orderNum"
@@ -218,16 +219,13 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           {...itemLayout}
           min={0}
           max={99}
-          rules={[
-            { required: true, message: '必填项' },
-            { type: 'number', min: 0, max: 99 },
-          ]}
+          rules={[rules.required, { type: 'number', min: 0, max: 99 }]}
         />
         <ProFormCheckbox.Group
           name="roleIdList"
           label="用户角色"
           {...itemLayout}
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[rules.required]}
           layout="horizontal"
           options={roleList}
         />
@@ -237,7 +235,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           label="是否删除"
           tooltip="删除是指逻辑删除哦~"
           {...itemLayout}
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[rules.required]}
           checkedChildren="是"
           unCheckedChildren="否"
 

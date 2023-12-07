@@ -1,17 +1,18 @@
 'use client'
 
-import { Inter } from 'next/font/google'
+// import { Inter } from 'next/font/google'
 import { useState, createContext, Context, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import './globals.css'
+import './antd.css'
 import { Provider } from 'react-redux'
 import InitLayoutCmp from '@/components/layout/InitCmp'
 import store from '@/store'
 
 export const GlobalContext: Context<{}> = createContext({})
 
-const inter = Inter({ subsets: ['latin'] })
+// const inter = Inter({ subsets: ['latin'] })
 
 export default function RootLayout({
   children,
@@ -39,7 +40,8 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body>
         <Provider store={store}>
           <GlobalContext.Provider value={{ common, isMobile }}>
             <InitLayoutCmp />

@@ -234,6 +234,7 @@ export default function Page() {
   ]
   const actionRef = useRef<ActionType>()
   const [deleteLoadingId, setDeleteLoadingId] = useState(null)
+  const [loading, setLoading] = useState(false)
   const handleDelete = (id) => {
     setDeleteLoadingId(id)
     deleteSysUserById({ id })
@@ -265,6 +266,7 @@ export default function Page() {
         columns={columns}
         bordered={true}
         rowKey="id"
+        loading={loading}
         scroll={{ x: '100%' }}
         rowClassName={(record: any, index) =>
           record.isDelete ? 'qm-row-delete' : ''
@@ -276,19 +278,21 @@ export default function Page() {
           title: (
             <ModalUpdateInfo
               ref={modalUpdateRef}
-              actionRef={actionRef}
-              currentRow={currentRow}
               resetCurrentRow={() => setCurrentRow({})}
+              currentRow={currentRow}
+              actionRef={actionRef}
             />
           ),
         }}
         request={async (params: { pageSize: number; current: number }) => {
           // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
           // 如果需要转化参数可以在这里进行修改
+          setLoading(true)
           const res: any = await fetchSysUserPageList({
             ...params,
             size: params.pageSize,
           })
+          setLoading(false)
           return {
             data: res.data.records,
             // success 请返回 true，
