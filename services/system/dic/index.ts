@@ -1,4 +1,4 @@
-import axios from '@/utils/axios.ts'
+import axios from '@/utils/adminAxios.ts'
 // 引入接口类型
 import type { SysDicInfoParams, SysDicListParams } from './type.ts'
 // 系统字段接口

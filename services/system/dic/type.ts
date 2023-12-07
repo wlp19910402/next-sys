@@ -14,7 +14,7 @@ export interface SysDicInfoParams {
 export interface SysDicListParams {
   current: number //当前页面
   size: number //每页显示条数
-  typeCode: string
+  dictTypeCode: string
 
   isHidden?: boolean //是否隐藏
   dictCode?: string
