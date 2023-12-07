@@ -14,7 +14,7 @@ import {
 } from '@/services/system/user'
 import rules from '@/utils/rules'
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Switch, message } from 'antd'
+import { Button, message } from 'antd'
 import {
   useState,
   useRef,
@@ -23,8 +23,7 @@ import {
   forwardRef,
 } from 'react'
 import type { ActionType } from '@ant-design/pro-table'
-import { useAppDispatch, useAppSelector } from '@/store/hooks'
-import { roleAllThunk } from '@/store/slice/role'
+import { useAppSelector } from '@/store/hooks'
 
 type ModalModifyFormDataProps = {
   actionRef: React.MutableRefObject<ActionType>
@@ -46,14 +45,8 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
   const formRef = useRef<any | null>(null)
   const { actionRef, currentRow, resetCurrentRow } = props
   const roleList = useAppSelector((state) => state.role.roleList)
-  const dispatch = useAppDispatch()
   const [loading, setLoading] = useState(false)
   const [isUpdatePwd, setIsUpdatePwd] = useState(false)
-  useEffect(() => {
-    if (roleList.length === 0) {
-      dispatch(roleAllThunk({ size: -1, current: 1 }))
-    }
-  }, [])
   useEffect(() => {
     if (currentRow.id) {
       setIsUpdatePwd(false)

@@ -7,6 +7,7 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
+import { Select } from 'antd'
 import ModalUpdateInfo from '@/app/sys/user/components/ModalUpdateInfo'
 import type { ActionType } from '@ant-design/pro-table'
 import DetailDescription from '@/app/sys/user/components/DetailDescription'
@@ -19,9 +20,18 @@ import {
   message,
   Drawer,
 } from 'antd'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
+import { roleAllThunk } from '@/store/slice/role'
 
 export default function Page() {
+  const roleList = useAppSelector((state) => state.role.roleList)
+  const dispatch = useAppDispatch()
+  useEffect(() => {
+    if (roleList.length === 0) {
+      dispatch(roleAllThunk({ size: -1, current: 1 }))
+    }
+  }, [])
   const columns:
     | ProColumns<
         {
@@ -78,6 +88,41 @@ export default function Page() {
       key: 'userPhone',
     },
     {
+      title: '用户角色',
+      dataIndex: 'roleId',
+      width: 76,
+      align: 'center',
+      key: 'roleId',
+      hideInTable: true,
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        // if (type === 'form') {
+        //   return null
+        // }
+        return <Select allowClear key="label" options={roleList} />
+      },
+    },
+    {
+      title: '角色绑定',
+      dataIndex: 'roleQueryType',
+      width: 76,
+      align: 'center',
+      key: 'roleQueryType',
+      hideInTable: true,
+
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        return (
+          <Select
+            allowClear
+            key="roleQueryType"
+            options={[
+              { label: '绑定', value: 'roleBind' },
+              { label: '未绑定', value: 'roleUnBind' },
+            ]}
+          />
+        )
+      },
+    },
+    {
       title: '显示顺序',
       dataIndex: 'orderNum',
       width: 76,
@@ -96,27 +141,20 @@ export default function Page() {
           {val ? '是' : '否'}
         </div>
       ),
+      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
+        return (
+          <Select
+            allowClear
+            key="isDelete"
+            options={[
+              { label: '是', value: true },
+              { label: '否', value: false },
+            ]}
+          />
+        )
+      },
     },
 
-    // {
-    //   title: '实名认证',
-    //   key: 'accountAuth',
-    //   width: 74,
-    //   hideInSearch: true,
-    //   dataIndex: 'accountAuth',
-    //   // render: (val) => (val ? '已认证' : '未认证'),
-    //   // renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-    //   //   if (type === 'form') {
-    //   //     return null
-    //   //   }
-    //   //   return (
-    //   //     <Select allowClear key="label">
-    //   //       <Select.Option value={'true'}>已认证</Select.Option>
-    //   //       <Select.Option value={'false'}>未认证</Select.Option>
-    //   //     </Select>
-    //   //   )
-    //   // },
-    // },
     // {
     //   title: '角色',
     //   key: 'roleId',
@@ -138,21 +176,6 @@ export default function Page() {
     //   //     return null
     //   //   }
     //   //   return <Select allowClear options={roleData} key="label" />
-    //   // },
-    // },
-    // {
-    //   title: '微信角色',
-    //   width: 80,
-    //   key: 'wechatRole',
-    //   dataIndex: 'wechatRoleName',
-    //   hideInSearch: true,
-    //   // renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-    //   //   if (type === 'form') {
-    //   //     return null
-    //   //   }
-    //   //   return (
-    //   //     <Select allowClear options={currentPerm.wxRoleOptions} key="label" />
-    //   //   )
     //   // },
     // },
 
