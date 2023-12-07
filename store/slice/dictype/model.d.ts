@@ -1,4 +1,4 @@
-interface DicTypeItemInterface {
+export interface DicTypeItemInterface {
   value: string | number
   label: string
   dictStruct: 'combo' | 'tree'

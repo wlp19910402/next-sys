@@ -13,26 +13,29 @@ import {
   DeleteOutlined,
 } from '@ant-design/icons'
 import { Select } from 'antd'
-import ModalUpdateInfo from '@/app/sys/user/components/ModalUpdateInfo'
+import ModalUpdateInfo from '@/app/sys/dic/components/ModalUpdateInfo'
 import type { ActionType } from '@ant-design/pro-table'
 import type { ProFormInstance } from '@ant-design/pro-form'
-import DetailDescription from '@/app/sys/user/components/DetailDescription'
+import DetailDescription from '@/app/sys/dic/components/DetailDescription'
 import { Tooltip, Divider, Button, Popconfirm, message, Drawer } from 'antd'
 import { useState, useRef, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { dicTypeAllThunk } from '@/store/slice/dictype'
-
+import { DicTypeItemInterface } from '@/store/slice/dictype/model'
 export default function Page() {
-  const dictypeList = useAppSelector((state) => state.dicType.dictypeList)
+  const dictypeList: any = useAppSelector((state) => state.dicType.dictypeList)
   const dispatch = useAppDispatch()
+  const [curDictType, setCurDictType] = useState<DicTypeItemInterface>({})
   useEffect(() => {
     if (dictypeList.length === 0) {
       dispatch(dicTypeAllThunk({ size: -1, current: 1 }))
     }
   }, [])
-  const [curDictStruct, setCurDictStruct] = useState(
-    dictypeList.length > 0 ? dictypeList[0].dictStruct : 'combo'
-  )
+  useEffect(() => {
+    if (dictypeList.length > 0) {
+      setCurDictType(dictypeList[0])
+    }
+  }, [dictypeList.length])
   const columns:
     | ProColumns<
         {
@@ -41,16 +44,6 @@ export default function Page() {
         string
       >[]
     | undefined = [
-    // {
-    //   title: '序号',
-    //   dataIndex: 'index',
-    //   hideInSearch: true,
-    //   width: 46,
-    //   fixed: 'left',
-    //   align: 'center',
-    //   rowScope: 'row',
-    //   render: (_, row: any, index: number) => <span>{index + 1}</span>,
-    // },
     {
       title: '字典名称(页面显示)',
       dataIndex: 'dictName',
@@ -67,13 +60,23 @@ export default function Page() {
       key: 'dictCode',
     },
     {
+      title: '字典结构',
+      dataIndex: 'dictTypeCode',
+      key: 'dictTypeCode',
+      width: '80px',
+      align: 'center',
+      hideInSearch: true,
+      render: () =>
+        curDictType?.dictStruct === 'tree' ? '树形结构' : '普通结构',
+    },
+    {
       title: '字典类型',
       dataIndex: 'dictTypeCode',
       key: 'dictTypeCode',
       width: '80px',
       align: 'center',
       initialValue: dictypeList.length > 0 ? dictypeList[0].value : '',
-      render: () => (curDictStruct === 'tree' ? '树形结构' : '普通结构'),
+      render: () => curDictType?.typeName,
       renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
         return (
           <Select
@@ -81,7 +84,7 @@ export default function Page() {
             onChange={(val, obj: any) => {
               form.setFieldsValue({ dictTypeCode: val })
               setLoading(true)
-              setCurDictStruct(obj.dictStruct)
+              setCurDictType(obj)
               formRef.current?.submit()
             }}
             options={dictypeList}
@@ -89,7 +92,6 @@ export default function Page() {
         )
       },
     },
-
     {
       title: '字典顺序',
       dataIndex: 'orderNum',
@@ -175,7 +177,11 @@ export default function Page() {
               type="link"
               size="small"
               onClick={() => {
-                setCurrentRow(record)
+                setCurrentRow({
+                  ...record,
+                  typeName: curDictType?.typeName,
+                  dictStruct: curDictType?.dictStruct,
+                })
                 setDetailDrawerVisable(true)
               }}
             >
@@ -202,7 +208,6 @@ export default function Page() {
 
   const actionRef = useRef<ActionType>()
   const formRef = useRef<ProFormInstance>()
-  // MutableRefObject<ProFormInstance>
   const [deleteLoadingId, setDeleteLoadingId] = useState(null)
   const [loading, setLoading] = useState(false)
   const handleDelete = (id) => {
@@ -254,7 +259,7 @@ export default function Page() {
           request={async (params: { dictTypeCode: string }) => {
             setLoading(true)
             let res: any
-            if (curDictStruct == 'combo') {
+            if (curDictType.dictStruct == 'combo') {
               res = await getSysDicComboList({
                 ...params,
               })

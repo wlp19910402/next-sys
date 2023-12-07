@@ -12,6 +12,7 @@ import {
   updateSysUser,
   getSysUserInfo,
 } from '@/services/system/user'
+import { getSysDicInfo } from '@/services/system/dic'
 import rules from '@/utils/rules'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, message } from 'antd'
@@ -51,7 +52,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
     if (currentRow.id) {
       setIsUpdatePwd(false)
       // 编辑获取根据id用户信息
-      getSysUserInfo({ id: currentRow.id }).then((res: any) => {
+      getSysDicInfo({ id: currentRow.id }).then((res: any) => {
         if (res.code === 200) {
           // 初始化数据
           formRef.current?.setFieldsValue({
@@ -109,7 +110,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
         formRef={formRef}
         {...tailLayout}
         loading={loading}
-        title={(currentRow.id ? '编辑' : '新增') + '用户'}
+        title={(currentRow.id ? '编辑' : '新增') + '字典'}
         open={openModal}
         onOpenChange={setOpenModal}
         modalProps={{ maskClosable: false }}
