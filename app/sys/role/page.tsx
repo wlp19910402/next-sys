@@ -6,11 +6,22 @@ import {
   FileTextOutlined,
   EditOutlined,
   DeleteOutlined,
+  UserOutlined,
+  MenuOutlined,
 } from '@ant-design/icons'
 import ModalUpdateInfo from '@/app/sys/role/components/ModalUpdateInfo'
+import UserCmp from '@/app/sys/role/components/UserCmp'
 import type { ActionType } from '@ant-design/pro-table'
 import DetailDescription from '@/app/sys/role/components/DetailDescription'
-import { Tooltip, Divider, Button, Popconfirm, message, Drawer } from 'antd'
+import {
+  Tooltip,
+  Divider,
+  Button,
+  Popconfirm,
+  message,
+  Drawer,
+  Modal,
+} from 'antd'
 import { useState, useRef } from 'react'
 import { Select } from 'antd'
 
@@ -105,7 +116,7 @@ export default function Page() {
       title: '操作',
       valueType: 'option',
       key: 'option',
-      width: '150px',
+      width: '240px',
       fixed: 'right',
       align: 'center',
       render: (_, record: any) => (
@@ -133,6 +144,32 @@ export default function Page() {
                 )}
               </Button>
             </Popconfirm>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip placement="topLeft" title="绑定用户">
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                setCurrentRow(record)
+                setIsUserModalOpen(true)
+              }}
+            >
+              <UserOutlined />
+            </Button>
+          </Tooltip>
+          <Divider type="vertical" />
+          <Tooltip placement="topLeft" title="绑定菜单">
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                setCurrentRow(record)
+                setDetailDrawerVisable(true)
+              }}
+            >
+              <MenuOutlined />
+            </Button>
           </Tooltip>
           <Divider type="vertical" />
           <Tooltip placement="topLeft" title="详情">
@@ -188,6 +225,10 @@ export default function Page() {
   const modalUpdateRef = useRef<any>(null)
   const [currentRow, setCurrentRow] = useState<any>({})
   const [detailDrawerVisable, setDetailDrawerVisable] = useState(false)
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const handleUserModalCancel = () => {
+    setIsUserModalOpen(false)
+  }
   return (
     <>
       <ProTable
@@ -219,8 +260,6 @@ export default function Page() {
           roleCode?: string
           isStop: boolean | string
         }) => {
-          // 这里需要返回一个 Promise,在返回之前你可以进行数据转化
-          // 如果需要转化参数可以在这里进行修改
           setLoading(true)
           let obj = { ...params }
           if (obj.roleCode === '') {
@@ -234,10 +273,7 @@ export default function Page() {
           setLoading(false)
           return {
             data: res.data.records,
-            // success 请返回 true，
-            // 不然 table 会停止解析数据，即使有数据
             success: res.code === 200,
-            // 不传会使用 data 的长度，如果是分页一定要传
             total: parseInt(res.data.total),
           }
         }}
@@ -251,6 +287,21 @@ export default function Page() {
       >
         <DetailDescription currentRow={currentRow} />
       </Drawer>
+
+      <Modal
+        title="用户列表"
+        open={isUserModalOpen}
+        onCancel={handleUserModalCancel}
+        width="84vw"
+        footer={false}
+      >
+        {isUserModalOpen && (
+          <UserCmp
+            roleId={currentRow?.id}
+            handleUserModalCancel={handleUserModalCancel}
+          />
+        )}
+      </Modal>
     </>
   )
 }
