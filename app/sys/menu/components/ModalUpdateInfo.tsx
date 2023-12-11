@@ -7,8 +7,8 @@ import {
   ProFormTreeSelect,
   ProFormSwitch,
 } from '@ant-design/pro-components'
-import { insertSysDic, updateSysDic } from '@/services/system/dic'
-import { getSysDicInfo } from '@/services/system/dic'
+import { insertSysMenu, updateSysMenu } from '@/services/system/menu'
+import { getSysMenuInfo } from '@/services/system/menu'
 import rules from '@/utils/rules'
 import { PlusOutlined } from '@ant-design/icons'
 import { Button, message } from 'antd'
@@ -20,13 +20,10 @@ import {
   forwardRef,
 } from 'react'
 import type { ActionType } from '@ant-design/pro-table'
-// import { useAppSelector } from '@/store/hooks'
-import { DicTypeItemInterface } from '@/store/slice/dictype/model'
 type ModalModifyFormDataProps = {
   actionRef: React.MutableRefObject<ActionType>
   currentRow: any
   resetCurrentRow: () => void
-  curDictType: DicTypeItemInterface
   treeParentList: any
 }
 const tailLayout = {
@@ -43,20 +40,10 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
   }))
   const [showParentId, setShowParentId] = useState(false)
   const formRef = useRef<any | null>(null)
-  const {
-    actionRef,
-    currentRow,
-    resetCurrentRow,
-    curDictType,
-    treeParentList,
-  } = props
+  const { actionRef, currentRow, resetCurrentRow, treeParentList } = props
   const [loading, setLoading] = useState(false)
   const handleShowParent = () => {
-    setShowParentId(
-      curDictType.dictStruct !== 'tree' ||
-        (curDictType.dictStruct === 'tree' &&
-          formRef.current?.getFieldValue('isLeaf'))
-    )
+    setShowParentId(formRef.current?.getFieldValue('isLeaf'))
   }
   useEffect(() => {
     handleShowParent()
@@ -64,7 +51,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
   useEffect(() => {
     if (currentRow.id) {
       // 编辑获取根据id用户信息
-      getSysDicInfo({ id: currentRow.id }).then((res: any) => {
+      getSysMenuInfo({ id: currentRow.id }).then((res: any) => {
         if (res.code === 200) {
           // 初始化数据
           formRef.current?.setFieldsValue({
@@ -89,9 +76,9 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
     let res
     try {
       if (currentRow.id) {
-        res = await updateSysDic({ ...values, id: currentRow.id })
+        res = await updateSysMenu({ ...values, id: currentRow.id })
       } else {
-        res = await insertSysDic(values)
+        res = await insertSysMenu(values)
       }
       if (res.code === 200) {
         message.success('提交成功')
@@ -111,7 +98,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
         formRef={formRef}
         {...tailLayout}
         loading={loading}
-        title={(currentRow.id ? '编辑' : '新增') + '字典'}
+        title={(currentRow.id ? '编辑' : '新增') + '菜单'}
         open={openModal}
         onOpenChange={setOpenModal}
         modalProps={{ maskClosable: false }}
@@ -132,8 +119,6 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           </Button>
         }
         initialValues={{
-          typeCode: curDictType.value,
-          typeName: curDictType.label,
           isHidden: false,
           isLeaf: true,
           isExpand: true,
@@ -156,7 +141,6 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           rules={[rules.required]}
           checkedChildren="是"
           unCheckedChildren="否"
-          hidden={curDictType.dictStruct !== 'tree'}
         />
         <ProFormSwitch
           name="isLeaf"
@@ -165,7 +149,6 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           rules={[rules.required]}
           checkedChildren="是"
           unCheckedChildren="否"
-          hidden={curDictType.dictStruct !== 'tree'}
           onChange={handleShowParent}
         />
         <ProFormTreeSelect
@@ -181,7 +164,7 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
             treeIcon: false,
             treeLine: true,
             fieldNames: {
-              label: 'dictName',
+              label: 'name',
               value: 'id',
             },
           }}
@@ -189,18 +172,31 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
 
         <ProFormText
           {...itemLayout}
-          name="dictName"
-          label="字典名称"
+          name="name"
+          label="菜单名称"
           rules={[rules.required]}
-          placeholder="请输入字典名称"
+          placeholder="请输入菜单名称"
         />
         <ProFormText
           {...itemLayout}
-          name="dictCode"
-          label="字典编码"
-          placeholder="请输入字典编码"
+          name="code"
+          label="菜单编码"
+          placeholder="请输入菜单编码"
           rules={[rules.required]}
-          disabled={currentRow?.id}
+        />
+        <ProFormText
+          {...itemLayout}
+          name="icon"
+          label="菜单图标"
+          placeholder="请输入菜单图标"
+          rules={[rules.required]}
+        />
+        <ProFormText
+          {...itemLayout}
+          name="path"
+          label="菜单路径"
+          placeholder="请输入菜单路径"
+          rules={[rules.required]}
         />
         <ProFormDigit
           name="orderNum"
@@ -209,22 +205,6 @@ const ModalModifyForm: any = (props: ModalModifyFormDataProps, ref) => {
           min={0}
           max={99}
           rules={[rules.required, { type: 'number', min: 0, max: 99 }]}
-        />
-        <ProFormText
-          {...itemLayout}
-          name="typeName"
-          label="字典类型"
-          rules={[rules.required]}
-          initialValue={curDictType.label}
-          disabled
-        />
-        <ProFormText
-          {...itemLayout}
-          name="typeCode"
-          label="字典编码"
-          rules={[rules.required]}
-          initialValue={curDictType.value}
-          hidden
         />
       </ModalForm>
     </>

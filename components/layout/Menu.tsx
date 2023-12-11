@@ -37,22 +37,9 @@ export default function Cmp(props: { menuUnfold: boolean }) {
       getItem('用户管理', '/sys/user', <MailOutlined />),
       getItem('字典类型管理', '/sys/dictype', <MailOutlined />),
       getItem('字典管理', '/sys/dic', <MailOutlined />),
-      getItem('角色管理', '/sys/role', <MailOutlined />),
       getItem('菜单管理', '/sys/menu', <MailOutlined />),
+      getItem('角色管理', '/sys/role', <MailOutlined />),
     ]),
-    getItem('单位管理', '/sys/company', <MailOutlined />),
-    getItem('设备管理', '/sys/machine', <MailOutlined />),
-    getItem('全域联系法官一体机', '/sys/contact', <MailOutlined />),
-    getItem('配件管理', '/sys/mountings', <MailOutlined />),
-    getItem('配件需求管理', '/sys/purchase', <MailOutlined />),
-    getItem('工单管理', '/sys/order', <SettingOutlined />, [
-      getItem('创建工单', '/sys/order/create'),
-      getItem('执行中工单', '/sys/order/processing'),
-      getItem('待处理工单', '/sys/order/waiting'),
-      getItem('已处理工单', '/sys/order/passing'),
-      getItem('已完成工单', '/sys/order/complete'),
-    ]),
-    getItem('工单查询', 'all', <MailOutlined />),
   ]
   const router = useRouter()
 

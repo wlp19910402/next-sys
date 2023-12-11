@@ -1,32 +1,25 @@
 'use client'
 
 import { ProTable, ProColumns } from '@ant-design/pro-components'
-import {
-  getSysDicComboList,
-  deleteSysDicById,
-  getSysDicTreeList,
-} from '@/services/system/dic'
+import { getSysMenuTreeList, deleteSysMenuById } from '@/services/system/menu'
 import { childrenFilter } from '@/utils/tool'
 import {
   FileTextOutlined,
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons'
-import { Select } from 'antd'
-import ModalUpdateInfo from '@/app/sys/dic/components/ModalUpdateInfo'
+import ModalUpdateInfo from '@/app/sys/menu/components/ModalUpdateInfo'
 import type { ActionType } from '@ant-design/pro-table'
 import type { ProFormInstance } from '@ant-design/pro-form'
-import DetailDescription from '@/app/sys/dic/components/DetailDescription'
+import DetailDescription from '@/app/sys/menu/components/DetailDescription'
 import { Tooltip, Divider, Button, Popconfirm, message, Drawer } from 'antd'
 import { useState, useRef, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { dicTypeAllThunk } from '@/store/slice/dictype'
-import { DicTypeItemInterface } from '@/store/slice/dictype/model'
 export default function Page() {
   const dictypeList: any = useAppSelector((state) => state.dicType.dictypeList)
   const dispatch = useAppDispatch()
   const [treeParentList, setTreeParentList] = useState([])
-  const [curDictType, setCurDictType] = useState<DicTypeItemInterface>({})
   useEffect(() => {
     if (dictypeList.length === 0) {
       dispatch(dicTypeAllThunk({ size: -1, current: 1 }))
@@ -34,7 +27,6 @@ export default function Page() {
   }, [])
   useEffect(() => {
     if (dictypeList.length > 0) {
-      setCurDictType(dictypeList[0])
     }
   }, [dictypeList.length])
   const columns:
@@ -46,67 +38,52 @@ export default function Page() {
       >[]
     | undefined = [
     {
-      title: '字典名称(页面显示)',
-      dataIndex: 'dictName',
+      title: '菜单名称',
+      dataIndex: 'name',
       hideInSearch: true,
-      width: '200px',
+      width: '140px',
       fixed: 'left',
-      key: 'dictName',
+      key: 'name',
     },
     {
-      title: '字典编码',
-      dataIndex: 'dictCode',
-      width: '150px',
-      hideInSearch: true,
-      key: 'dictCode',
-    },
-    {
-      title: '字典结构',
-      dataIndex: 'dictTypeCode',
-      key: 'dictTypeCode',
-      width: '80px',
+      title: '图标',
+      dataIndex: 'icon',
+      key: 'icon',
+      width: '90px',
       align: 'center',
       hideInSearch: true,
-      render: () =>
-        curDictType?.dictStruct === 'tree' ? '树形结构' : '普通结构',
     },
     {
-      title: '字典类型',
-      dataIndex: 'dictTypeCode',
-      key: 'dictTypeCode',
-      width: '80px',
+      title: '菜单编码',
+      dataIndex: 'code',
+      key: 'code',
+      width: '140px',
       align: 'center',
-      initialValue: dictypeList.length > 0 ? dictypeList[0].value : '',
-      render: () => curDictType?.typeName,
-      renderFormItem: (item, { type, defaultRender, ...rest }, form) => {
-        return (
-          <Select
-            key="dictTypeCode"
-            onChange={(val, obj: any) => {
-              form.setFieldsValue({ dictTypeCode: val })
-              setLoading(true)
-              setCurDictType(obj)
-              formRef.current?.submit()
-            }}
-            options={dictypeList}
-          />
-        )
-      },
+      hideInSearch: true,
     },
     {
-      title: '字典顺序',
+      title: '路径',
+      dataIndex: 'path',
+      width: '140px',
+      key: 'path',
+      hideInSearch: true,
+    },
+    {
+      title: '菜单顺序',
       dataIndex: 'orderNum',
-      width: '80px',
+      width: 74,
+      align: 'center',
       key: 'orderNum',
       hideInSearch: true,
     },
     {
       title: '是否叶子',
       dataIndex: 'isLeaf',
-      width: 76,
+      width: 74,
       align: 'center',
       key: 'isLeaf',
       hideInSearch: true,
+      hideInTable: true,
       render: (val: any) => (
         <div className={`${val ? 'text-gary-500' : 'text-green-400'}`}>
           {!val ? '否' : '是'}
@@ -116,7 +93,7 @@ export default function Page() {
     {
       title: '是否展开',
       dataIndex: 'isExpand',
-      width: 76,
+      width: 74,
       align: 'center',
       key: 'isExpand',
       hideInSearch: true,
@@ -129,7 +106,7 @@ export default function Page() {
     {
       title: '是否隐藏',
       dataIndex: 'isHidden',
-      width: 76,
+      width: 74,
       align: 'center',
       key: 'isHidden',
       hideInSearch: true,
@@ -180,8 +157,6 @@ export default function Page() {
               onClick={() => {
                 setCurrentRow({
                   ...record,
-                  typeName: curDictType?.typeName,
-                  dictStruct: curDictType?.dictStruct,
                 })
                 setDetailDrawerVisable(true)
               }}
@@ -213,7 +188,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false)
   const handleDelete = (id) => {
     setDeleteLoadingId(id)
-    deleteSysDicById({ id })
+    deleteSysMenuById({ id })
       .then((res) => {
         if (res.code === 200) {
           message.success('删除成功')
@@ -247,6 +222,7 @@ export default function Page() {
             record.isDelete ? 'qm-row-delete' : ''
           }
           pagination={false}
+          search={false}
           toolbar={{
             title: (
               <ModalUpdateInfo
@@ -254,25 +230,19 @@ export default function Page() {
                 resetCurrentRow={() => setCurrentRow({})}
                 currentRow={currentRow}
                 actionRef={actionRef}
-                curDictType={curDictType}
                 treeParentList={treeParentList}
               />
             ),
           }}
-          request={async (params: { dictTypeCode: string }) => {
+          request={async (params: any) => {
             setLoading(true)
             let res: any
-            if (curDictType.dictStruct == 'combo') {
-              res = await getSysDicComboList({
-                ...params,
-              })
-              setTreeParentList([])
-            } else {
-              res = await getSysDicTreeList({
-                ...params,
-              })
-            }
-            if (res.code === 200 && curDictType.dictStruct === 'tree') {
+
+            res = await getSysMenuTreeList({
+              ...params,
+            })
+
+            if (res.code === 200) {
               setTreeParentList(childrenFilter(res.data))
             }
             setLoading(false)

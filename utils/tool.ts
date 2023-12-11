@@ -11,3 +11,15 @@ export const childrenFilter = (arr) => {
     }
   })
 }
+
+// export const treeSelectList = (arr, label, val) => {
+//   return arr.map((item: any) => {
+//     return {
+//       title: item[label],
+//       value: item[val],
+//       ...(item.children && item.children.length > 0
+//         ? { children: treeSelectList(item.children, label, val) }
+//         : {}),
+//     }
+//   })
+// }
