@@ -15,10 +15,10 @@ import { useState, useRef } from 'react'
 
 type ModalModifyFormDataProps = {
   roleId: string
-  handleUserModalCancel: () => void
+  handleModalCancel: () => void
 }
 export default function Page(props: ModalModifyFormDataProps, ref) {
-  const { roleId, handleUserModalCancel } = props
+  const { roleId, handleModalCancel } = props
   const formRef = useRef<any | null>(null)
   const [isBind, setIsBind] = useState<boolean>(true)
   const columns:
@@ -197,7 +197,7 @@ export default function Page(props: ModalModifyFormDataProps, ref) {
           selectedRows,
           onCleanSelected,
         }) => {
-          console.log(selectedRowKeys, selectedRows)
+          // console.log(selectedRowKeys, selectedRows)
           return selectedRowKeys.length ? (
             <Space size={24}>
               <span>
@@ -234,7 +234,7 @@ export default function Page(props: ModalModifyFormDataProps, ref) {
                     message.success('操作成功')
                     actionRef?.current?.reload()
                     setSelectedRowKeys([])
-                    handleUserModalCancel()
+                    handleModalCancel()
                   } else {
                     message.error(res.msg)
                   }

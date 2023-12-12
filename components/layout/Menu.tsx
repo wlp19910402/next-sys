@@ -44,7 +44,7 @@ export default function Cmp(props: { menuUnfold: boolean }) {
   const router = useRouter()
 
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e.key, router)
+    // console.log('click ', e.key, router)
     router.push(e.key)
   }
   const globalContext = useContext<any>(GlobalContext)

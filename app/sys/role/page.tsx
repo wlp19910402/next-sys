@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons'
 import ModalUpdateInfo from '@/app/sys/role/components/ModalUpdateInfo'
 import UserCmp from '@/app/sys/role/components/UserCmp'
+import MenuCmp from '@/app/sys/role/components/MenuCmp'
 import type { ActionType } from '@ant-design/pro-table'
 import DetailDescription from '@/app/sys/role/components/DetailDescription'
 import {
@@ -165,7 +166,7 @@ export default function Page() {
               size="small"
               onClick={() => {
                 setCurrentRow(record)
-                setDetailDrawerVisable(true)
+                setIsMenuModalOpen(true)
               }}
             >
               <MenuOutlined />
@@ -226,8 +227,12 @@ export default function Page() {
   const [currentRow, setCurrentRow] = useState<any>({})
   const [detailDrawerVisable, setDetailDrawerVisable] = useState(false)
   const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const [isMenuModalOpen, setIsMenuModalOpen] = useState(false)
   const handleUserModalCancel = () => {
     setIsUserModalOpen(false)
+  }
+  const handleMenuModalCancel = () => {
+    setIsMenuModalOpen(false)
   }
   return (
     <>
@@ -298,7 +303,21 @@ export default function Page() {
         {isUserModalOpen && (
           <UserCmp
             roleId={currentRow?.id}
-            handleUserModalCancel={handleUserModalCancel}
+            handleModalCancel={handleUserModalCancel}
+          />
+        )}
+      </Modal>
+      <Modal
+        title="绑定菜单"
+        open={isMenuModalOpen}
+        onCancel={handleMenuModalCancel}
+        width="84vw"
+        footer={false}
+      >
+        {isMenuModalOpen && (
+          <MenuCmp
+            roleId={currentRow?.id}
+            handleModalCancel={handleMenuModalCancel}
           />
         )}
       </Modal>
